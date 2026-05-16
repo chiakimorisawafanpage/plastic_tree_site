@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
-import ParallaxBackground from './components/ParallaxBackground';
 import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 import CartPage from './pages/CartPage';
@@ -28,7 +27,6 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <div className="min-h-screen bg-black">
-          <ParallaxBackground />
           <Navbar />
           <AnimatedRoutes />
         </div>
