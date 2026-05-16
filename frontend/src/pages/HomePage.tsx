@@ -112,6 +112,13 @@ const THEMES: Record<string, ThemeConfig> = {
 const SECTION_ORDER = ['singles', 'hakusei', 'plastictree', 'parade'];
 const PRODUCT_MAP: Record<string, number> = { singles: 0, hakusei: 1, plastictree: 2, parade: 3 };
 
+const FALLBACK_PRODUCTS: Product[] = [
+  { id: 1, title: 'Single Collection', artist: 'Plastic Tree', year: 1998, price: 2800, description: 'Сборник синглов Plastic Tree — ключевые треки раннего периода группы, объединённые в одном издании.', image_url: 'https://placehold.co/400x400/2d5a3f/e0e0e0?text=Single+Collection', tracklist: ['1. 割れた窓','2. 本当の嘘','3. 絶望の丘','4. トレモロ','5. Sink','6. ツメタイヒカリ','7. スライド.','8. ロケット','9. プラネタリウム','10. 鳴り響く、鐘','11. アブストラクト マイ ライフ','12. パノラマ','13. 「月世界」','14. ブランコから','15. オルガン.','16. プラネタリウム（98 Version）','17. 液体（98 Version）'], genre: 'Alternative Rock', format: 'CD' },
+  { id: 2, title: '剥製', artist: 'Plastic Tree', year: 2019, price: 3200, description: '13-й студийный альбом Plastic Tree. Глубокий и атмосферный релиз с тёмным, меланхоличным звучанием.', image_url: 'https://placehold.co/400x400/808080/e0e0e0?text=剥製', tracklist: ['1. ○生物','2. フラスコ','3. マイム','4. ハシエンダ','5. 告白','6. インソムニアブルース','7. float','8. 落花','9. スラッシングパンプキン・デスマーチ','10. スロウ','11. 剥製','12. ●静物'], genre: 'Alternative Rock', format: 'CD' },
+  { id: 3, title: 'Plastic Tree', artist: 'Plastic Tree', year: 2024, price: 3500, description: 'Новый одноимённый альбом группы. Экспериментальное звучание, сочетающее классический стиль с новыми текстурами.', image_url: 'https://placehold.co/400x400/1a1a1a/e0e0e0?text=Plastic+Tree', tracklist: ['1. ライムライト','2. ざわめき','3. no rest for the wicked','4. ゆうえん','5. シカバネーゼ','6. 宵闇','7. Invisible letter','8. 痣花','9. メルヘン','10. 夢落ち'], genre: 'Alternative Rock', format: 'CD' },
+  { id: 4, title: 'Parade', artist: 'Plastic Tree', year: 2000, price: 2500, description: '3-й студийный альбом. Один из самых культовых релизов группы с красивым, меланхоличным звучанием.', image_url: 'https://placehold.co/400x400/8b2232/e0e0e0?text=Parade', tracklist: ['1. エーテル','2. ロケット','3. スライド.','4. 少女狂想','5. ベランダ.','6. 空白の日','7. 十字路','8. トレモロ','9. 睡眠薬','10. bloom','11. Sink','12. そしてパレードは続く'], genre: 'Alternative Rock', format: 'CD' },
+];
+
 function FloatingDecor({ element, scrollY }: { element: FloatingElement; scrollY: ReturnType<typeof useScroll>['scrollY'] }) {
   const yOffset = useTransform(scrollY, [0, 5000], [0, -400 * element.speed]);
   const xOffset = useTransform(scrollY, [0, 5000], [0, 30 * element.speed * (parseFloat(element.x) > 50 ? -1 : 1)]);
@@ -261,7 +268,9 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.getProducts().then(setProducts);
+    api.getProducts()
+      .then((data) => setProducts(data.length > 0 ? data : FALLBACK_PRODUCTS))
+      .catch(() => setProducts(FALLBACK_PRODUCTS));
   }, []);
 
   function handleCardClick(product: Product) {
