@@ -2,6 +2,7 @@ import { useAuth } from '../context/AuthContext';
 import { Product, CartItem, Order } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_AUTH = import.meta.env.VITE_API_AUTH || '';
 
 export function useApi() {
   const { token } = useAuth();
@@ -9,16 +10,23 @@ export function useApi() {
   const headers = (): Record<string, string> => {
     const h: Record<string, string> = { 'Content-Type': 'application/json' };
     if (token) h['Authorization'] = `Bearer ${token}`;
+    if (API_AUTH) h['Authorization'] = h['Authorization'] || `Basic ${btoa(API_AUTH)}`;
+    return h;
+  };
+
+  const publicHeaders = (): Record<string, string> => {
+    const h: Record<string, string> = {};
+    if (API_AUTH) h['Authorization'] = `Basic ${btoa(API_AUTH)}`;
     return h;
   };
 
   async function getProducts(): Promise<Product[]> {
-    const res = await fetch(`${API_URL}/api/products`);
+    const res = await fetch(`${API_URL}/api/products`, { headers: publicHeaders() });
     return res.json();
   }
 
   async function getProduct(id: number): Promise<Product> {
-    const res = await fetch(`${API_URL}/api/products/${id}`);
+    const res = await fetch(`${API_URL}/api/products/${id}`, { headers: publicHeaders() });
     return res.json();
   }
 
