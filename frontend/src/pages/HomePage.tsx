@@ -323,6 +323,14 @@ export default function HomePage() {
             transition={{ duration: 1.5 }}
             className="text-center px-6 z-10"
           >
+            <motion.p
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+              className="text-white/20 text-xs tracking-widest uppercase mb-8 font-light"
+            >
+              Official Store
+            </motion.p>
             <motion.h1
               className="text-4xl md:text-6xl font-extralight text-neutral-900 tracking-widest uppercase"
               initial={{ opacity: 0, y: 20 }}
